@@ -1,5 +1,5 @@
 name: NoCombatSpawn
-main: NoCombatSpawnn\Main
+main: NoCombatSpawn\Main
 author: ShaneDragonDev
 load: POSTWORLD
 description: NoCombatSpawn Keeps Players Outta Spawn When Tryna Enter Managed By Server.properties
