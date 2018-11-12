@@ -1,37 +1,26 @@
 <?php
-
 namespace NoCombatSpawn;
-
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-
 use pocketmine\event\entity\EntityDamageEvent;
-
 use pocketmine\event\Listener;
-
 use pocketmine\event\player\PlayerMoveEvent;
-
 use pocketmine\Player;
-
 use pocketmine\plugin\PluginBase;
-
 use pocketmine\scheduler\PluginTask;
-
 class Main extends PluginBase implements Listener{
-
 	private $inCombat = [];
-
 	public function onEnable() : void {
 		$this->saveDefaultConfig();
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
-	
+
 	public function onMove(PlayerMoveEvent $event) : void {
 		if(!$event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getFrom()) and $event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getTo()) and in_array($event->getPlayer()->getLowerCaseName(), $this->inCombat)) {
 			$event->setCancelled();
 			$event->getPlayer()->sendMessage(str_replace("&", $this->getConfig()->get("keep-out message", "")));
 		}
 	}
-	
+
 	public function onAttack(EntityDamageEvent $event) : void {
 		if($event instanceof EntityDamageByEntityEvent) {
 			$damaged = $event->getEntity();
@@ -44,7 +33,7 @@ class Main extends PluginBase implements Listener{
 						$this->name = $name;
 					}
 					public function onRun(int $currentTick) {
-					    
+
 						$this->getOwner()->removeInCombat($this->name);
 					}
 				}, $this->getConfig()->get("combat cooldown", 0) * 0);
@@ -58,7 +47,7 @@ class Main extends PluginBase implements Listener{
 
 						$this->getOwner()->removeInCombat($this->name);
 					}
-				}, $this->getConfig()->get("combat cooldown", 30) * 20);
+				}, $this->getConfig()->get("combat cooldown", 0) * 0);
 			}
 		}
 	}
