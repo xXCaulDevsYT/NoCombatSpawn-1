@@ -1,44 +1,25 @@
 <?php
-
 namespace NoCombatSpawn;
-
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-
 use pocketmine\event\entity\EntityDamageEvent;
-
 use pocketmine\event\Listener;
-
 use pocketmine\event\player\PlayerMoveEvent;
-
 use pocketmine\Player;
-
 use pocketmine\plugin\PluginBase;
-
 use pocketmine\scheduler\PluginTask;
-
-class Main extends PluginBase implements Listener {
-	/** @var string[] $inCombat */
+class Main extends PluginBase implements Listener{
 	private $inCombat = [];
-
-	public function onEnable() : void {
+	public function onEnable(): void{
 		$this->saveDefaultConfig();
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
-
-	/**
-	 * @param PlayerMoveEvent $event
-	 */
-	public function onMove(PlayerMoveEvent $event) : void {
-		if(!$event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getFrom()) and $event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getTo()) and in_array($event->getPlayer()->getLowerCaseName(), $this->inCombat)) {
+	public function onMove(PlayerMoveEvent $event): void{
+		if(!$event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getFrom()) and $event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getTo()) and in_array($event->getPlayer()->getLowerCaseName(), $this->inCombat)){
 			$event->setCancelled();
-			$event->getPlayer()->sendMessage(str_replace("&", TextFormat::ESCAPE, $this->getConfig()->get("keep-out message", "")));
+			$event->getPlayer()->sendMessage(str_replace("&", TextFormat::ESCAPE, $this->getConfig()->get("keep-out-message", "")));
 		}
 	}
-
-	/**
-	 * @param EntityDamageEvent $event
-	 */
-	public function onAttack(EntityDamageEvent $event) : void {
+	public function onAttack(EntityDamageEvent $event): void{
 		if($event instanceof EntityDamageByEntityEvent) {
 			$damaged = $event->getEntity();
 			$damager = $event->getDamager();
@@ -50,10 +31,9 @@ class Main extends PluginBase implements Listener {
 						$this->name = $name;
 					}
 					public function onRun(int $currentTick) {
-						/** @noinspection PhpUndefinedMethodInspection */
 						$this->getOwner()->removeInCombat($this->name);
 					}
-				}, $this->getConfig()->get("combat cooldown", 30) * 20);
+				}, $this->getConfig()->get("combat-cooldown", 0) * 0);
 				$this->getServer()->getScheduler()->scheduleDelayedTask(new class($this, $damaged->getLowerCaseName()) extends PluginTask {
 					private $name = "";
 					public function __construct(Main $owner, string $name) {
@@ -61,15 +41,14 @@ class Main extends PluginBase implements Listener {
 						$this->name = $name;
 					}
 					public function onRun(int $currentTick) {
-						/** @noinspection PhpUndefinedMethodInspection */
 						$this->getOwner()->removeInCombat($this->name);
 					}
-				}, $this->getConfig()->get("combat cooldown", 30) * 20);
+				}, $this->getConfig()->get("combat-cooldown", 0) * 0);
 			}
 		}
 	}
 
-	public function removeInCombat(string $name) : void {
+	public function removeInCombat(string $name): void{
 		$key = array_search($name, $this->inCombat);
 		if($key !== false) {
 			unset($this->inCombat[$key]);
