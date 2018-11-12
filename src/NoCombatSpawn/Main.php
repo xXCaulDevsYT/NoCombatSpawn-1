@@ -17,7 +17,7 @@ class Main extends PluginBase implements Listener{
 	public function onMove(PlayerMoveEvent $event) : void {
 		if(!$event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getFrom()) and $event->getFrom()->getLevel()->checkSpawnProtection($event->getPlayer(), $event->getTo()) and in_array($event->getPlayer()->getLowerCaseName(), $this->inCombat)) {
 			$event->setCancelled();
-			$event->getPlayer()->sendMessage(str_replace("&", $this->getConfig()->get("keep-out message", "")));
+			$event->getPlayer()->sendMessage(str_replace("&", $this->getConfig()->get("keep-out-message", "")));
 		}
 	}
 
@@ -36,7 +36,7 @@ class Main extends PluginBase implements Listener{
 
 						$this->getOwner()->removeInCombat($this->name);
 					}
-				}, $this->getConfig()->get("combat cooldown", 0) * 0);
+				} $this->getConfig()->get("combat-cooldown", 0) * 0);
 				$this->getServer()->getScheduler()->scheduleDelayedTask(new class($this, $damaged->getLowerCaseName()) extends PluginTask {
 					private $name = "";
 					public function __construct(Main $owner, string $name) {
@@ -47,7 +47,7 @@ class Main extends PluginBase implements Listener{
 
 						$this->getOwner()->removeInCombat($this->name);
 					}
-				}, $this->getConfig()->get("combat cooldown", 0) * 0);
+				} $this->getConfig()->get("combat-cooldown", 0) * 0);
 			}
 		}
 	}
