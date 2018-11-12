@@ -1,0 +1,7 @@
+name: NoCombatSpawn
+main: NoCombatSpawnn\Main
+author: ShaneDragonDev
+load: POSTWORLD
+description: NoCombatSpawn Keeps Players Outta Spawn When Tryna Enter Managed By Server.properties
+api: 3.2.5
+version: 1.0.0
