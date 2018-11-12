@@ -7,7 +7,7 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\PluginTask;
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase implements Listener {
 	private $inCombat = [];
 	public function onEnable() : void {
 		$this->saveDefaultConfig();
@@ -20,7 +20,6 @@ class Main extends PluginBase implements Listener{
 			$event->getPlayer()->sendMessage(str_replace("&", $this->getConfig()->get("keep-out-message", "")));
 		}
 	}
-
 	public function onAttack(EntityDamageEvent $event) : void {
 		if($event instanceof EntityDamageByEntityEvent) {
 			$damaged = $event->getEntity();
@@ -33,7 +32,6 @@ class Main extends PluginBase implements Listener{
 						$this->name = $name;
 					}
 					public function onRun(int $currentTick) {
-
 						$this->getOwner()->removeInCombat($this->name);
 					}
 				} $this->getConfig()->get("combat-cooldown", 0) * 0);
@@ -51,7 +49,6 @@ class Main extends PluginBase implements Listener{
 			}
 		}
 	}
-
 	public function removeInCombat(string $name) : void {
 		$key = array_search($name, $this->inCombat);
 		if($key !== false) {
